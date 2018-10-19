@@ -1,0 +1,1 @@
+docker run -p 3306:3306 --name mysql57 -v /usr/local/etc/docker/mysql/config/my.cnf:/etc/my.cnf --restart always -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7
