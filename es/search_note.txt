@@ -1,0 +1,151 @@
+一.普通查询
+
+//灵活语句查询
+{
+  "query": {
+    "query_string": {
+      "query": "customer_gender:FEMALE AND customer_id:5"
+    }
+  }
+}
+//精准查询
+{
+  "query": {
+    "term": {
+      "customer_id": 10
+    }
+  }
+}
+//范围查询
+{
+  "query": {
+    "range": {
+      "customer_id": {
+        "lte": 45,
+        "gte": 1
+      }
+    }
+  }
+}
+
+二.聚合
+
+//组合查询
+{
+    "query": {
+        "bool": {
+            "must": {
+                "match": {
+                    "customer_id": "10"
+                }
+            },
+            "filter": {
+                "match": {
+                    "customer_gender": "MALE"
+                }
+            }
+        }
+    }
+}
+//聚合查询
+{
+	"aggs":{
+		"all_customer_id":{
+			"terms":{
+				"field": "customer_id"
+			}
+		}
+	}
+}
+//聚合查询 最大
+{
+    "size": "0",
+    "query": {
+        "range": {
+            "customer_id": {
+                "lte": 45,
+                "gte": 1
+            }
+        }
+    },
+    "aggs": {
+        "max_price": {
+            "max": {
+                "field": "products.base_price"
+            }
+        }
+    }
+}
+//聚合查询 平均
+{
+    "size": "0",
+    "aggs": {
+        "avg_price": {
+            "avg": {
+                "field": "products.base_price"
+            }
+        }
+    }
+}
+
+//聚合查询 百分比
+{
+    "size": "0",
+    "aggs": {
+        "percentiles_price": {
+            "percentiles": {
+                "field": "products.base_price",
+                "percents" : [95, 99, 99.9]
+            }
+        }
+    }
+}
+
+//聚合查询 加
+{
+    "size": "0",
+    "aggs": {
+        "totle_price": {
+            "sum": {
+                "field": "products.base_price",
+                "missing": 0,
+                "script": {
+                    "source": "_value * 2"
+                }
+            }
+        }
+    }
+}
+//聚合查询 统计所有
+{
+    "size": "0",
+    "aggs": {
+        "stats_price": {
+            "stats": {
+                "field": "products.base_price"
+            }
+        },
+        "extended_stats_price": {
+            "extended_stats": {
+                "field": "products.base_price"
+            }
+        },
+        "totle_price": {
+            "sum": {
+                "field": "products.base_price",
+                "missing": 0,
+                "script": {
+                    "source": "_value * 2"
+                }
+            }
+        },
+        "avg_price": {
+            "avg": {
+                "field": "products.base_price"
+            }
+        }
+    }
+}
+
+
+三.桶聚合

@@ -5,3 +5,9 @@ docker run -p 3307:3306 --name mysql57 -v /var/lib/mysql:/var/lib/mysql -v /usr/
 docker run -d -p 9090:9000 -v /var/run/docker.sock:/var/run/docker.sock abh1nav/dockerui
 
 docker run -d -p 6380:6379 -v /docker/redis/data:/data --name redis40 redis:4.0 redis-server --appendonly yes
+
+sudo docker run -p 8080:8080 -p 50000:50000 -d  -v /data/docker/jenkins:/var/jenkins_home  jenkins/jenkins:lts
+
+docker network create somenetwork
+docker run -d --name elasticsearch --net somenetwork -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.7.2
+docker run -d --name kibana --net somenetwork -p 5601:5601 kibana:6.7.2
