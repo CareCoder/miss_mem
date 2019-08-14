@@ -27,6 +27,15 @@
     }
   }
 }
+// 排序
+{
+    "sort": {
+        "rangeTime": {
+            "order": "desc"
+        }
+    }
+}
+
 
 二.聚合
 
@@ -47,16 +56,7 @@
         }
     }
 }
-//聚合查询
-{
-	"aggs":{
-		"all_customer_id":{
-			"terms":{
-				"field": "customer_id"
-			}
-		}
-	}
-}
+
 //聚合查询 最大
 {
     "size": "0",
@@ -149,3 +149,14 @@
 
 
 三.桶聚合
+
+//聚合查询
+{
+	"aggs":{
+		"all_customer_id":{
+			"terms":{
+				"field": "customer_id"
+			}
+		}
+	}
+}
