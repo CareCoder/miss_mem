@@ -1,4 +1,5 @@
-//省车辆来源地统计
+#### 省车辆来源地统计
+```json
 {
     "size": "0",
     "query": {
@@ -45,8 +46,11 @@
         }
     }
 }
+```
 
-//全国车流量统计
+
+#### 全国车流量统计
+```json
 {
 	"size": "0",
 	"query": {
@@ -81,9 +85,10 @@
 		}
 	}
 }
+```
 
-
-//摄像头数据统计
+#### 摄像头数据统计
+```json
 GET /liuyin_test_camera/_search
 {
 	"size": "0",
@@ -125,9 +130,10 @@ GET /liuyin_test_camera/_search
 		}
 	}
 }
+```
 
-
-//按时间和摄像头统计车流量
+#### 按时间和摄像头统计车流量
+```json
 GET /liuyin_test_camera/_doc/_search
 {
 	"size": "0",
@@ -160,3 +166,35 @@ GET /liuyin_test_camera/_doc/_search
 		}
 	}
 }
+```
+
+#### 每个摄像头的最新数据
+```json
+GET /liuyin_test_camera/_doc/_search
+{
+	"size": "0",
+	"aggs": {
+		"terms_camera_code": {
+			"terms": {
+				"field": "cameraCode",
+				"size": 100
+			},
+			"aggs": {
+				"top_range_time": {
+					"top_hits": {
+						"sort": {
+							"rangeTime": {
+								"order": "desc"
+							}
+						},
+						"_source": {
+							"include": ["cameraCode", "rangeTime", "count", "tpi", "jamLength", "avgSpeed"]
+						},
+						"size": 1
+					}
+				}
+			}
+		}
+	}
+}
+```

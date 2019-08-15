@@ -160,3 +160,39 @@
 		}
 	}
 }
+//复合聚合
+GET /liuyin_test_camera/_doc/_search
+{
+	"size": "1",
+	"aggs" : {
+        "my_buckets": {
+            "composite" : {
+                "sources" : [
+                    { "cameraCode": { "terms": { "field": "cameraCode" } } },
+                    { "rangeTime": { "terms": {"field": "rangeTime" } } }
+                ]
+            }
+        }
+	}
+}
+
+//命中聚合
+GET /liuyin_test_camera/_doc/_search
+{
+  "size":"0",
+  "aggs":{
+    "top_range_time":{
+      "top_hits":{
+        "sort":{
+          "rangeTime":{
+            "order":"desc"
+          }
+        },
+        "_source":{
+          "include":["cameraCode","rangeTime","count","tpi","jamLength","avgSpeed"]
+        },
+        "size":1
+      }
+    }
+  }
+}
