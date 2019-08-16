@@ -1,0 +1,210 @@
+#### 省车辆来源地统计
+```json
+GET /liuyin_traffic_location/_search
+{
+  "size": "10",
+  "query": {
+    "bool": {
+      "must": {
+        "nested": {
+          "path": "provinceList",
+          "query": {
+            "term": {
+              "provinceList.proviceName.keyword": "四川"
+            }
+          }
+        }
+      },
+      "filter": {
+        "range": {
+          "rangeTime": {
+            "gt": "2018-01-01 00:00:00",
+            "lte": "2018-01-01 00:10:00"
+          }
+        }
+      }
+    }
+  },
+  "aggs": {
+    "nested_city_list": {
+      "nested": {
+        "path": "provinceList.cityList"
+      },
+      "aggs": {
+        "terms_city_names": {
+          "terms": {
+            "field": "provinceList.cityList.cityName.keyword",
+            "size": 1000
+          },
+          "aggs":{
+            "sum_count":{
+              "sum":{
+                "field": "provinceList.cityList.count"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+
+#### 全国车流量统计
+```json
+GET /liuyin_traffic_location/_search
+{
+  "size": "11",
+  "query": {
+    "bool": {
+      "filter": {
+        "range": {
+          "rangeTime": {
+            "gt": "2018-01-01 00:00:00",
+            "lte": "2018-01-01 00:10:00"
+          }
+        }
+      }
+    }
+  },
+  "aggs": {
+    "nested_city_list": {
+      "nested": {
+        "path": "provinceList"
+      },
+      "aggs": {
+        "terms_city_names": {
+          "terms": {
+            "field": "provinceList.proviceName.keyword",
+            "size": 1000
+          },
+          "aggs":{
+            "sum_count":{
+              "sum":{
+                "field": "provinceList.count"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+
+#### 摄像头数据统计
+```json
+GET /liuyin_test_camera/_search
+{
+  "size": "0",
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "cameraCode.keyword": {
+              "value": "A0001"
+            }
+          }
+        }
+      ],
+      "filter": {
+        "range": {
+          "rangeTime": {
+            "gt": "2018-01-02 00:00:00",
+            "lte": "2018-01-02 23:59:59"
+          }
+        }
+      }
+    }
+  },
+  "aggs": {
+    "camera_codes": {
+      "terms": {
+        "field": "cameraCode.keyword",
+        "size": "1000",
+        "order": {
+          "counts.value": "desc"
+        }
+      },
+      "aggs": {
+        "counts": {
+          "sum": {
+            "field": "count"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### 按时间和摄像头统计车流量
+```json
+GET /liuyin_test_camera/_doc/_search
+{
+	"size": "0",
+	"query": {
+		"bool": {
+			"filter": {
+				"range": {
+					"rangeTime": {
+						"gte": "2018-08-14 00:00:00",
+						"lte": "2018-08-14 02:00:00"
+					}
+				}
+			}
+		}
+	},
+	"aggs": {
+		"city_name": {
+			"date_histogram": {
+				"field": "rangeTime",
+				"interval": "1h",
+				"format": "yyyy-MM-dd HH:mm:ss"
+			},
+			"aggs": {
+				"count_sum": {
+					"sum": {
+						"field": "count"
+					}
+				}
+			}
+		}
+	}
+}
+```
+
+
+#### 每个摄像头的最新数据
+```json
+GET /liuyin_test_camera/_doc/_search
+{
+	"size": "0",
+	"aggs": {
+		"terms_camera_code": {
+			"terms": {
+				"field": "cameraCode.keyword",
+				"size": 100
+			},
+			"aggs": {
+				"top_range_time": {
+					"top_hits": {
+						"sort": {
+							"rangeTime": {
+								"order": "desc"
+							}
+						},
+						"_source": {
+							"include": ["cameraCode", "rangeTime", "count", "tpi", "jamLength", "avgSpeed"]
+						},
+						"size": 1
+					}
+				}
+			}
+		}
+	}
+}
+```

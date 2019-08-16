@@ -1,52 +1,100 @@
-PUT /liuyin_test_camera_v2
+PUT /liuyin_traffic_location_temp
 
-POST /liuyin_test_camera_v2/_doc/_mapping
+POST /liuyin_traffic_location_temp/_doc/_mapping
 {
-
-    "_doc": {
-      "properties": {
-        "avgSpeed": {
-          "type": "long"
-        },
-        "cameraCode": {
-          "type": "keyword"
-        },
-        "count": {
-          "type": "long"
-        },
-        "date": {
-          "type": "long"
-        },
-        "jamLength": {
-          "type": "float"
-        },
-        "maxTime": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
+  "_doc": {
+    "properties": {
+      "avgSpeed": {
+        "type": "long"
+      },
+      "cameraCode": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
           }
-        },
-        "minTime": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "rangeTime": {
-          "type": "date",
-          "format": "yyyy-MM-dd HH:mm:ss"
-        },
-        "tpi": {
-          "type": "float"
         }
+      },
+      "count": {
+        "type": "long"
+      },
+      "date": {
+        "type": "long"
+      },
+      "jamLength": {
+        "type": "float"
+      },
+      "maxTime": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "minTime": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "provinceList": {
+        "type": "nested",
+        "properties": {
+          "cityList": {
+            "type": "nested",
+            "properties": {
+              "cityName": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "count": {
+                "type": "long"
+              },
+              "provinceName": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "count": {
+            "type": "long"
+          },
+          "proviceName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "rangeTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss"
+      },
+      "tpi": {
+        "type": "float"
       }
     }
+  }
 }
 
 POST /_reindex
@@ -75,75 +123,4 @@ POST /_aliases
 
     ]
 
-}
-
-
-
-
-PUT /liuyin_test_traffic_v2
-
-POST /liuyin_test_traffic_v2/_doc/_mapping
-{
-
-    "_doc": {
-      "properties": {
-        "cityList": {
-          "type": "nested",
-          "properties": {
-            "cityName": {
-              "type": "keyword"
-            },
-            "count": {
-              "type": "long"
-            },
-            "provinceName": {
-              "type": "text",
-              "fields": {
-                "keyword": {
-                  "type": "keyword",
-                  "ignore_above": 256
-                }
-              }
-            }
-          }
-        },
-        "count": {
-          "type": "long"
-        },
-        "date": {
-          "type": "long"
-        },
-        "maxTime": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "minTime": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "provinceName": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "rangeTime": {
-          "type": "date",
-          "format": "yyyy-MM-dd HH:mm:ss"
-        }
-      }
-    }
 }
