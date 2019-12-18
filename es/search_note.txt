@@ -35,6 +35,18 @@
         }
     }
 }
+//null查询
+{
+  "query": {
+    "bool": {
+      "must_not": {
+        "exists": {
+          "field": "字段名"
+        }
+      }
+    }
+  }
+
 
 
 二.聚合
@@ -189,7 +201,7 @@ GET /liuyin_test_camera/_doc/_search
           }
         },
         "_source":{
-          "include":["cameraCode","rangeTime","count","tpi","jamLength","avgSpeed"]
+          "includes":["cameraCode","rangeTime","count","tpi","jamLength","avgSpeed"]
         },
         "size":1
       }

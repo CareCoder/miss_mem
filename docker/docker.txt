@@ -11,3 +11,17 @@ sudo docker run -p 8080:8080 -p 50000:50000 -d  -v /data/docker/jenkins:/var/jen
 docker network create somenetwork
 docker run -d --name elasticsearch --net somenetwork -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.7.2
 docker run -d --name kibana --net somenetwork -p 5601:5601 kibana:6.7.2
+docker pull docker.elastic.co/beats/filebeat:6.7.2
+
+
+docker run --net="host" docker.elastic.co/beats/filebeat:6.7.2 setup -e \
+  -E output.logstash.enabled=false \
+  -E output.elasticsearch.hosts=['192.168.10.104:9200'] \
+  -E setup.kibana.host=192.168.10.104:5601
+
+  docker run \
+    --label co.elastic.logs/module=mysql \
+    --detach=true \
+    --name my-apache-app \
+    -p 8080:80 \
+    httpd:2.4

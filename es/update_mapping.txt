@@ -124,3 +124,38 @@ POST /_aliases
     ]
 
 }
+
+
+
+
+PUT /hy_traffic_baidu_five_minute
+
+POST /hy_traffic_baidu_five_minute/_doc/_mapping
+{
+  "_doc": {
+    "properties": {
+      "sectionId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "rangeTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss"
+      },
+      "jamLength": {
+        "type": "float"
+      },
+      "avgSpeed": {
+        "type": "float"
+      },
+      "tpi": {
+        "type": "float"
+      }
+    }
+  }
+}

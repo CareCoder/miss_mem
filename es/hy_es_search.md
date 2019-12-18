@@ -154,7 +154,10 @@ GET /liuyin_test_camera/_doc/_search
 			"date_histogram": {
 				"field": "rangeTime",
 				"interval": "1h",
-				"format": "yyyy-MM-dd HH:mm:ss"
+				"format": "yyyy-MM-dd HH:mm:ss",
+				"order":{
+				  "_key":"desc"
+				}
 			},
 			"aggs": {
 				"count_sum": {
@@ -198,3 +201,11 @@ GET /liuyin_test_camera/_doc/_search
 	}
 }
 ```
+
+
+POST test/_doc/1/_update
+{
+    "doc" : {
+        "name" : "new_name"
+    }
+}
