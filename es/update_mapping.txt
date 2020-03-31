@@ -107,6 +107,7 @@ POST /_reindex
   }
 }
 
+DELETE /liuyin_test_camera
 
 POST /_aliases
 {
