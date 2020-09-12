@@ -1,27 +1,39 @@
+name=mysql57
 docker run -p 3307:3306 --name mysql57 -v /usr/local/etc/docker/mysql/config/my.cnf:/etc/my.cnf --restart always -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7
-
 docker run -p 3307:3306 --name mysql57 -v /var/lib/mysql:/var/lib/mysql -v /usr/local/etc/docker/mysql/config/my.cnf:/etc/my.cnf --restart always -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7
 
+name=dockerui
 docker run -d -p 9090:9000 -v /var/run/docker.sock:/var/run/docker.sock abh1nav/dockerui
 
+name=redis
 docker run -d -p 6380:6379 -v /docker/redis/data:/data --name redis40 redis:4.0 redis-server --appendonly yes
 
-sudo docker run -p 8080:8080 -p 50000:50000 -d  -v /data/docker/jenkins:/var/jenkins_home  jenkins/jenkins:lts
+name=jenkins
+mkdir /docker/jenkins
+chown -R 1000:1000 /docker/jenkins
+docker run --restart=unless-stopped -d -p 9290:8080 -p 50000:50000 -v /docker/jenkins:/var/jenkins_home --name jenkins jenkins/jenkins:lts
 
+name=elastice search
 docker network create somenetwork
 docker run -d --name elasticsearch --net somenetwork -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.7.2
 docker run -d --name kibana --net somenetwork -p 5601:5601 kibana:6.7.2
 docker pull docker.elastic.co/beats/filebeat:6.7.2
-
-
 docker run --net="host" docker.elastic.co/beats/filebeat:6.7.2 setup -e \
   -E output.logstash.enabled=false \
   -E output.elasticsearch.hosts=['192.168.10.104:9200'] \
   -E setup.kibana.host=192.168.10.104:5601
-
-  docker run \
+docker run \
     --label co.elastic.logs/module=mysql \
     --detach=true \
     --name my-apache-app \
     -p 8080:80 \
     httpd:2.4
+
+name=私人镜像仓库
+docker run -itd -p 192.168.93.128:5000:5000 -v /docker/registry:/var/lib/registry --restart=always --name docker-registry registry:latest
+
+name=搭建网易云
+docker run -d -p 9090:8080 -e NODE_ENV=production --restart=always --name music nondanee/unblockneteasemusic:latest
+
+name=rancher
+docker run -d --restart=unless-stopped -p 80:80 -p 443:443 --name rancher rancher/rancher:v2.4.5

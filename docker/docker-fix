@@ -1,0 +1,48 @@
+安装docker
+curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+systemctl start docker
+systemctl enable docker
+安装docker-compose
+参考网站:https://juejin.im/post/6844903965381885966
+curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+用于查看 Docker 的磁盘使用情况
+docker system df
+
+
+
+于清理磁盘，删除关闭的容器、无用的数据卷和网络
+docker system prune
+(清理得更加彻底，可以将没有容器使用 Docker 镜像都删掉)
+docker system prune -a
+
+
+删除所有 dangling 镜像(即无 tag 的镜像)：
+docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+
+删除所有 dangling 数据卷(即无用的 volume)：
+docker volume rm $(docker volume ls -qf dangling=true)
+
+
+完全清空docker
+docker stop $(docker ps -aq)
+docker system prune -f
+docker volume rm $(docker volume ls -q)
+docker image rm $(docker image ls -q)
+rm -rf /etc/ceph \
+       /etc/cni \
+       /etc/kubernetes \
+       /opt/cni \
+       /opt/rke \
+       /run/secrets/kubernetes.io \
+       /run/calico \
+       /run/flannel \
+       /var/lib/calico \
+       /var/lib/etcd \
+       /var/lib/cni \
+       /var/lib/kubelet \
+       /var/lib/rancher/rke/log \
+       /var/log/containers \
+       /var/log/pods \
+       /var/run/calico
