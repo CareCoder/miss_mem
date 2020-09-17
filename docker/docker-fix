@@ -10,7 +10,10 @@ chmod +x /usr/local/bin/docker-compose
 用于查看 Docker 的磁盘使用情况
 docker system df
 
-
+批量删除容器
+docker rm -f $(docker ps -a |  grep "k8s*"  | awk '{print $1}')
+docker rm -f $(docker ps -a |  grep "rancher*"  | awk '{print $1}')
+docker rm -f $(docker ps -a |  grep "kube*"  | awk '{print $1}')
 
 于清理磁盘，删除关闭的容器、无用的数据卷和网络
 docker system prune

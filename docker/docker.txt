@@ -9,9 +9,15 @@ name=redis
 docker run -d -p 6380:6379 -v /docker/redis/data:/data --name redis40 redis:4.0 redis-server --appendonly yes
 
 name=jenkins
-mkdir /docker/jenkins
+mkdir -p /docker/jenkins
 chown -R 1000:1000 /docker/jenkins
-docker run --restart=unless-stopped -d -p 9290:8080 -p 50000:50000 -v /docker/jenkins:/var/jenkins_home --name jenkins jenkins/jenkins:lts
+docker run \
+  --restart=unless-stopped -d \
+  -u root \
+  -p 10030:8080 \
+  -v /docker/jenkins:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --name jenkins jenkinsci/blueocean
 
 name=elastice search
 docker network create somenetwork

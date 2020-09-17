@@ -1,0 +1,94 @@
+// 需要在jenkins的Credentials设置中配置jenkins-harbor-creds、jenkins-k8s-config参数
+pipeline {
+
+    agent {
+        node {
+            label "${params.JENKINS_NODE}"
+        }
+    }
+    environment {
+        HARBOR_CREDS = credentials('jenkins-harbor-creds')
+        K8S_CONFIG = credentials('jenkins-k8s-config')
+    }
+    parameters {
+        string(name: 'HARBOR_HOST_IN', defaultValue: '172.26.143.190:10020', description: 'harbor仓库地址')
+        string(name: 'DOCKER_IMAGE', defaultValue: 'demeter', description: 'docker镜像名')
+        string(name: 'APP_NAME', defaultValue: 'user-tag-process', description: 'k8s中标签名')
+        string(name: 'K8S_NAMESPACE', defaultValue: 'default', description: 'k8s的namespace名称')
+        string(name: 'JENKINS_NODE', defaultValue: 'dev', description: 'jenkins的节点')
+        string(name: 'GIT_BRANCH', defaultValue: 'dev', description: '分支版本')
+    }
+    stages {
+      stage('Checkout') {
+          agent {
+              node {
+                  label "${params.JENKINS_NODE}"
+              }
+          }
+          steps {
+              checkout([$class: 'GitSCM', branches: [[name: "${params.GIT_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs:[[credentialsId: 'demeter-server-pk', url: 'http://39.100.136.61/biaoguoworks/user-tag-process.git']]])
+          }
+    	}
+    	stage('Maven Build') {
+            agent {
+                docker {
+                    image 'maven:3-jdk-8-alpine'
+                    label "${params.JENKINS_NODE}"
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
+            steps {
+                sh 'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'
+            }
+
+        }
+        stage('Docker Build') {
+            agent {
+                node {
+                    label "${params.JENKINS_NODE}"
+                }
+            }
+            steps {
+                sh "docker login -u ${HARBOR_CREDS_USR} -p ${HARBOR_CREDS_PSW} ${params.HARBOR_HOST_IN}"
+                sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.HARBOR_HOST_IN}/${params.DOCKER_IMAGE}/${params.APP_NAME}:${BUILD_NUMBER} ."
+                sh "docker push ${params.HARBOR_HOST_IN}/${params.DOCKER_IMAGE}/${params.APP_NAME}:${BUILD_NUMBER}"
+            }
+
+        }
+        stage('Deploy') {
+            agent {
+                docker {
+                    image 'lwolf/helm-kubectl-docker'
+                    label "${params.JENKINS_NODE}"
+                    args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                sh "mkdir -p /root/.kube"
+                sh "echo ${K8S_CONFIG} | base64 -d > /root/.kube/config"
+                sh "sed -e 's#{IMAGE_URL}#${params.HARBOR_HOST_IN}/${params.DOCKER_IMAGE}/${params.APP_NAME}#g;s#{IMAGE_TAG}#${BUILD_NUMBER}#g;s#{APP_NAME}#${params.APP_NAME}#g;s#{SPRING_PROFILE}#k8s-test#g' k8s-deployment.tpl > k8s-deployment.yml"
+                sh "kubectl apply -f k8s-deployment.yml --namespace=${params.K8S_NAMESPACE}"
+            }
+
+        }
+
+        stage('note') {
+          agent {
+              node {
+                  label "${params.JENKINS_NODE}"
+              }
+          }
+          steps {
+              sh '''curl \'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=bd622e26-cb2f-40c9-a75a-fa6e6501b50a\' \\
+               -H \'Content-Type: application/json\' \\
+               -d \'
+               {
+                    "msgtype": "text",
+                    "text": {
+                        "content": "用户画像工程重启中,请稍等1~2分钟..."
+                    }
+               }\''''
+          }
+    	}
+    }
+}
