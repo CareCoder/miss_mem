@@ -1,0 +1,13 @@
+/etc/sysctl.conf 里面加4句
+
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_tw_reuse = 1 #让TIME_WAIT状态可以重用，这样即使TIME_WAIT占满了所有端口，也不会拒绝新的请求造成障碍 默认是0
+net.ipv4.tcp_tw_recycle = 1 #让TIME_WAIT尽快回收 默认0
+net.ipv4.tcp_fin_timeout = 30
+
+然后执行 /sbin/sysctl -p 让参数生效
+
+这个命令查看  netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
+
+/sbin/sysctl -p /etc/sysctl.conf
+/sbin/sysctl -w net.ipv4.route.flush=1

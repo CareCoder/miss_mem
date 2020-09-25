@@ -52,6 +52,7 @@ pipeline {
                 sh "docker login -u ${HARBOR_CREDS_USR} -p ${HARBOR_CREDS_PSW} ${params.HARBOR_HOST_IN}"
                 sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.HARBOR_HOST_IN}/${params.DOCKER_IMAGE}/${params.APP_NAME}:${BUILD_NUMBER} ."
                 sh "docker push ${params.HARBOR_HOST_IN}/${params.DOCKER_IMAGE}/${params.APP_NAME}:${BUILD_NUMBER}"
+                sh "docker rmi ${params.HARBOR_HOST_IN}/${params.DOCKER_IMAGE}/${params.APP_NAME}:${BUILD_NUMBER}"
             }
 
         }

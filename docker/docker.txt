@@ -43,3 +43,6 @@ docker run -d -p 9090:8080 -e NODE_ENV=production --restart=always --name music 
 
 name=rancher
 docker run -d --restart=unless-stopped -p 80:80 -p 443:443 --name rancher rancher/rancher:v2.4.5
+
+name=nexus3
+docker run -d -p 10040:8081 --name nexus -v /docker/nexus3:/var/nexus-data --restart=always sonatype/nexus3:3.26.1

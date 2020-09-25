@@ -1,0 +1,7 @@
+安装
+https://blog.csdn.net/farYang/article/details/79427573
+
+kubectl get pods
+kubectl get deployment
+kubectl delete deployment demeter-server-dev
+kubectl scale deployment demeter-server-dev --replicas 0
