@@ -1,12 +1,12 @@
 tee /etc/docker/daemon.json <<-'EOF'
 {
     "registry-mirrors": [
-        "https://1nj0zren.mirror.aliyuncs.com",
+        "https://1bdwxskn.mirror.aliyuncs.com",
         "https://docker.mirrors.ustc.edu.cn",
         "http://f1361db2.m.daocloud.io",
         "https://registry.docker-cn.com"
     ],
-    "insecure-registries":["192.168.93.128:5000"]
+    "insecure-registries":["172.26.143.190:10020"]
 }
 EOF
 systemctl daemon-reload

@@ -1,0 +1,11 @@
+在pipeline中执行shell如果用到curl命令则需要双重转义才能使用局部变量
+def _AUTHOR = sh(returnStdout: true, script: 'git log --pretty=%an HEAD -1').trim()
+sh """curl \'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=ad6f1d5a-c9e4-42e2-b6fe-b130660b91db\' \\
+               -H \'Content-Type: application/json\' \\
+               -d \"
+               {
+                    \\""msgtype\\"": \\""text\\"",
+                    \\""text\\"": {
+                        \\""content\\"": \\""WCS工程重启中,请稍等1~3分钟...$_AUTHOR\\""
+                    }
+               }\""""

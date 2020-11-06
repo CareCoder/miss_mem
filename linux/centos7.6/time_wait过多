@@ -11,3 +11,34 @@ net.ipv4.tcp_fin_timeout = 30
 
 /sbin/sysctl -p /etc/sysctl.conf
 /sbin/sysctl -w net.ipv4.route.flush=1
+
+
+
+
+
+vm.swappiness = 0
+net.ipv4.neigh.default.gc_stale_time = 120
+
+# see details in https://help.aliyun.com/knowledge_detail/39428.html
+net.ipv4.conf.all.rp_filter = 0
+net.ipv4.conf.default.rp_filter = 0
+net.ipv4.conf.default.arp_announce = 2
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_announce = 2
+
+# see details in https://help.aliyun.com/knowledge_detail/41334.html
+net.ipv4.tcp_max_tw_buckets = 5000
+#net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 1024
+net.ipv4.tcp_synack_retries = 2
+
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+
+kernel.sysrq = 1
+
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_tw_reuse=1 #让TIME_WAIT状态可以重用，这样即使TIME_WAIT占满了所有端口，也不会拒绝新的请求造成障碍 默认是0
+net.ipv4.tcp_tw_recycle=1 #让TIME_WAIT尽快回收 默认0
+net.ipv4.tcp_fin_timeout=30

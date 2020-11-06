@@ -46,3 +46,12 @@ docker run -d --restart=unless-stopped -p 80:80 -p 443:443 --name rancher ranche
 
 name=nexus3
 docker run -d -p 10040:8081 --name nexus -v /docker/nexus3:/var/nexus-data --restart=always sonatype/nexus3:3.26.1
+
+name=confluence
+docker run -m 4096M --memory-swap -1 \
+-e LANG=en_US.UTF-8 -e JVM_MAXIMUM_MEMORY=4096m --name confluence -d \
+-p 10050:8090 -p 10051:8091 --restart=always \
+-v /docker/confluence:/var/atlassian/application-data/confluence \
+-v /docker/confluence/lib/mysql-connector-java-5.1.47-bin.jar:/opt/atlassian/confluence/confluence/WEB-INF/lib/mysql-connector-java-5.1.47-bin.jar \
+-v /docker/confluence/fonts:/usr/local/share/fonts \
+-v /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime atlassian/confluence-server:6.15.7-alpine

@@ -1,0 +1,57 @@
+﻿apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    field.cattle.io/creatorId: user-4p6w6
+    field.cattle.io/ingressState: '{"Z2F0ZXdheS1pbmdyZXNzL2Rldi9kZXYuYmlhb2d1b3dvcmtzLmNvbS8vLzEwMDg5":"","Z2F0ZXdheS1pbmdyZXNzL2Rldi9kZXYuYmlhb2d1b3dvcmtzLmNvbS8vZ2F0ZXdheS8xMDA4OA==":""}'
+    field.cattle.io/publicEndpoints: '[{"addresses":["172.26.143.191"],"port":80,"protocol":"HTTP","serviceName":"dev:demeter-discover","ingressName":"dev:gateway-ingress","hostname":"dev.biaoguoworks.com","path":"/","allNodes":true},{"addresses":["172.26.143.191"],"port":80,"protocol":"HTTP","serviceName":"dev:gateway-discover","ingressName":"dev:gateway-ingress","hostname":"dev.biaoguoworks.com","path":"/gateway","allNodes":true}]'
+  creationTimestamp: null
+  generation: 1
+  labels:
+    cattle.io/creator: norman
+  managedFields:
+  - apiVersion: networking.k8s.io/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:loadBalancer:
+          f:ingress: {}
+    manager: nginx-ingress-controller
+    operation: Update
+    time: "2020-10-29T02:39:36Z"
+  - apiVersion: extensions/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:field.cattle.io/creatorId: {}
+          f:field.cattle.io/ingressState: {}
+          f:field.cattle.io/publicEndpoints: {}
+        f:labels:
+          .: {}
+          f:cattle.io/creator: {}
+      f:spec:
+        f:rules: {}
+    manager: Go-http-client
+    operation: Update
+    time: "2020-10-29T02:43:38Z"
+  name: gateway-ingress
+  selfLink: /apis/extensions/v1beta1/namespaces/dev/ingresses/gateway-ingress
+spec:
+  rules:
+  - host: dev.biaoguoworks.com
+    http:
+      paths:
+      - backend:
+          serviceName: demeter-discover
+          servicePort: 10089
+        path: /
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: gateway-discover
+          servicePort: 10088
+        path: /gateway
+        pathType: ImplementationSpecific
+status:
+  loadBalancer: {}

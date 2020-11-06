@@ -1,5 +1,19 @@
 安装docker
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+tee /etc/docker/daemon.json <<-'EOF'
+{
+    "registry-mirrors": [
+        "https://1bdwxskn.mirror.aliyuncs.com",
+        "https://docker.mirrors.ustc.edu.cn",
+        "http://f1361db2.m.daocloud.io",
+        "https://registry.docker-cn.com"
+    ],
+    "insecure-registries":["172.26.143.190:10020","172.26.143.191:5000"],
+    "log-driver":"json-file",
+    "log-opts": {"max-size":"500m", "max-file":"3"}
+}
+EOF
+systemctl daemon-reload
 systemctl start docker
 systemctl enable docker
 安装docker-compose
@@ -26,6 +40,9 @@ docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
 
 删除所有 dangling 数据卷(即无用的 volume)：
 docker volume rm $(docker volume ls -qf dangling=true)
+
+搜索docker的PID
+docker inspect -f '{{.Id}} {{.Name}} {{.State.Pid}}' $(docker ps -a -q)
 
 
 完全清空docker

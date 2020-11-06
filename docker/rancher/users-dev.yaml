@@ -1,0 +1,258 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"users-dev"},"name":"users-dev","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"users-dev"}},"template":{"metadata":{"labels":{"app":"users-dev"}},"spec":{"containers":[{"env":[{"name":"NACOS_NAME_SPACE","value":"a6fcf9a9-d298-4b5e-8868-9ff8fd4e8912"}],"image":"172.26.143.190:10020/demeter/users/users-dev:4","name":"users-dev","ports":[{"containerPort":8080}]}]}}}}'
+  creationTimestamp: "2020-10-27T03:15:27Z"
+  generation: 2
+  labels:
+    app: users-dev
+  managedFields:
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations: {}
+        f:labels:
+          .: {}
+          f:app: {}
+      f:spec:
+        f:progressDeadlineSeconds: {}
+        f:replicas: {}
+        f:revisionHistoryLimit: {}
+        f:selector:
+          f:matchLabels:
+            .: {}
+            f:app: {}
+        f:strategy:
+          f:rollingUpdate: {}
+          f:type: {}
+        f:template:
+          f:metadata:
+            f:labels:
+              .: {}
+              f:app: {}
+          f:spec:
+            f:containers:
+              k:{"name":"users-dev"}:
+                .: {}
+                f:env:
+                  .: {}
+                  k:{"name":"NACOS_NAME_SPACE"}:
+                    .: {}
+                    f:name: {}
+                    f:value: {}
+                f:image: {}
+                f:imagePullPolicy: {}
+                f:name: {}
+                f:ports:
+                  .: {}
+                  k:{"containerPort":8080,"protocol":"TCP"}:
+                    .: {}
+                    f:containerPort: {}
+                    f:protocol: {}
+                f:resources: {}
+                f:terminationMessagePath: {}
+                f:terminationMessagePolicy: {}
+            f:dnsPolicy: {}
+            f:restartPolicy: {}
+            f:schedulerName: {}
+            f:securityContext: {}
+            f:terminationGracePeriodSeconds: {}
+    manager: kubectl-client-side-apply
+    operation: Update
+    time: "2020-10-27T03:15:27Z"
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:kubectl.kubernetes.io/last-applied-configuration: {}
+      f:spec:
+        f:minReadySeconds: {}
+        f:strategy:
+          f:rollingUpdate:
+            f:maxSurge: {}
+            f:maxUnavailable: {}
+        f:template:
+          f:metadata:
+            f:annotations:
+              .: {}
+              f:cattle.io/timestamp: {}
+              f:field.cattle.io/ports: {}
+          f:spec:
+            f:containers:
+              k:{"name":"users-dev"}:
+                f:livenessProbe:
+                  .: {}
+                  f:failureThreshold: {}
+                  f:initialDelaySeconds: {}
+                  f:periodSeconds: {}
+                  f:successThreshold: {}
+                  f:tcpSocket:
+                    .: {}
+                    f:port: {}
+                  f:timeoutSeconds: {}
+                f:ports:
+                  k:{"containerPort":8080,"protocol":"TCP"}:
+                    f:name: {}
+                f:readinessProbe:
+                  .: {}
+                  f:failureThreshold: {}
+                  f:initialDelaySeconds: {}
+                  f:periodSeconds: {}
+                  f:successThreshold: {}
+                  f:tcpSocket:
+                    .: {}
+                    f:port: {}
+                  f:timeoutSeconds: {}
+                f:securityContext:
+                  .: {}
+                  f:capabilities: {}
+                f:volumeMounts:
+                  .: {}
+                  k:{"mountPath":"/applogs"}:
+                    .: {}
+                    f:mountPath: {}
+                    f:name: {}
+            f:dnsConfig: {}
+            f:volumes:
+              .: {}
+              k:{"name":"vol1"}:
+                .: {}
+                f:hostPath:
+                  .: {}
+                  f:path: {}
+                  f:type: {}
+                f:name: {}
+    manager: Go-http-client
+    operation: Update
+    time: "2020-10-27T03:37:02Z"
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:deployment.kubernetes.io/revision: {}
+      f:status:
+        f:availableReplicas: {}
+        f:conditions:
+          .: {}
+          k:{"type":"Available"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Progressing"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+        f:observedGeneration: {}
+        f:readyReplicas: {}
+        f:replicas: {}
+        f:unavailableReplicas: {}
+        f:updatedReplicas: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2020-10-27T03:37:02Z"
+  name: users-dev
+  namespace: default
+  resourceVersion: "8800470"
+  selfLink: /apis/apps/v1/namespaces/default/deployments/users-dev
+  uid: 8ecb64f8-75d7-4dd8-a5f7-80c77a1c4a4f
+spec:
+  minReadySeconds: 30
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: users-dev
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: "2020-10-27T03:37:01Z"
+        field.cattle.io/ports: '[[{"containerPort":8080,"dnsName":"users-dev-nodeport","hostPort":0,"kind":"NodePort","name":"8080tcp1","protocol":"TCP"}]]'
+      creationTimestamp: null
+      labels:
+        app: users-dev
+    spec:
+      containers:
+      - env:
+        - name: NACOS_NAME_SPACE
+          value: a6fcf9a9-d298-4b5e-8868-9ff8fd4e8912
+        image: 172.26.143.190:10020/demeter/users/users-dev:4
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 3
+        name: users-dev
+        ports:
+        - containerPort: 8080
+          name: 8080tcp1
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          successThreshold: 2
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 3
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /applogs
+          name: vol1
+      dnsConfig: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /data/all-log
+          type: ""
+        name: vol1
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2020-10-27T03:15:31Z"
+    lastUpdateTime: "2020-10-27T03:15:31Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2020-10-27T03:15:27Z"
+    lastUpdateTime: "2020-10-27T03:37:02Z"
+    message: ReplicaSet "users-dev-65875fb874" is progressing.
+    reason: ReplicaSetUpdated
+    status: "True"
+    type: Progressing
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 2
+  unavailableReplicas: 1
+  updatedReplicas: 1
