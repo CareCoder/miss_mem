@@ -5,3 +5,4 @@ kubectl get pods
 kubectl get deployment
 kubectl delete deployment demeter-server-dev
 kubectl scale deployment demeter-server-dev --replicas 0
+kubectl describe pods | grep -C 20 10.42.0.47
