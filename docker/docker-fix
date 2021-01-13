@@ -1,5 +1,6 @@
 安装docker
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+systemctl start docker
 tee /etc/docker/daemon.json <<-'EOF'
 {
     "registry-mirrors": [
@@ -10,11 +11,11 @@ tee /etc/docker/daemon.json <<-'EOF'
     ],
     "insecure-registries":["172.26.143.190:10020","172.26.143.191:5000"],
     "log-driver":"json-file",
-    "log-opts": {"max-size":"500m", "max-file":"3"}
+    "log-opts": {"max-size":"100m", "max-file":"3"}
 }
 EOF
 systemctl daemon-reload
-systemctl start docker
+systemctl restart docker
 systemctl enable docker
 安装docker-compose
 参考网站:https://juejin.im/post/6844903965381885966
@@ -44,6 +45,10 @@ docker volume rm $(docker volume ls -qf dangling=true)
 搜索docker的PID
 docker inspect -f '{{.Id}} {{.Name}} {{.State.Pid}}' $(docker ps -a -q)
 
+直接copy镜像文件出来
+docker create --rm --entrypoint cat image:latest /runapp/ROOT.jar > ROOT.jar
+docker cp $(docker create --rm image:latest):/runapp/ROOT.jar ROOT.jar
+export CT=$(docker create --rm 8651178b7091) && docker cp $CT:/runapp/ROOT.jar ./ && docker rm $CT
 
 完全清空docker
 docker stop $(docker ps -aq)

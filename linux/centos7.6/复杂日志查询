@@ -1,0 +1,3 @@
+ sed -n '/2020-12-16 07:55:00/,/2020-12-16 08:05:00/p' demeter-error.log > error-pod.log
+前后时间都需要换(当sed -n 命令结束时间失效的时候)
+awk 'BEGIN{FS="\n";RS="2020-12-16";ORS=""}{for(x=1;x<=NF;x++){print $x"\t"} print "\n"}' demeter-error.log | awk '{if ( $1 >= "07:55:00" && $1 <= "08:05:00") print $0 }' > error-new.log
